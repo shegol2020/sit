@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .active {
+            background-color: white;
+        }
+
+        .tab-container>div {
+            display: none;
+        }
+
+        .tab-container .show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="buttons">
+        <button class="plural-button active" data-tab="plural-tab">Несколько</button>
+        <button class="singular-button" data-tab="singular-tab">Одно</button>
+    </div>
+    <div class="tab-container">
+        <div class="tab-one singular-tab">
+            <input type="date" placeholder="date" id="date">
+            <input type="text" placeholder="event" id="event">
+            <div class="status-list"></div>
+            <button class="add-item" disabled="true">OK</button>
+        </div>
+        <div class="tab-two plural-tab show">
+            <textarea rows="10" cols="45" name="text"></textarea>
+            <div class="status-buttons-container">
+                <p><input type="radio" data-status="music"> Музыка</p>
+                <p><input type="radio" data-status="nomusic" checked> Не музыка</p>
+            </div>
+            <button class="add-list">OK2</button>
+        </div>
+    </div>
+    <div class="container event-list">
+
+    </div>
+</body>
+<script src="localforage.js">
+</script>
+<script type="module">
+    import getText from "./gettext.js"
+    import Render from "./render.js";
+    import makeBtnActive from "./makeBtnActive.js";
+    import ValidationForm from "./validationForm.js";
+
+    localforage.config({
+        driver: localforage.IndexedDB,
+        name: 'myApp'
+    });
+
+    /* divs */
+    const tabContainer = document.querySelector(".tab-container");
+
+    /* buttons */
+    const buttonsContainer = document.querySelector(".buttons");
+    const statusBtnContainer = document.querySelector(".status-buttons-container");
+
+
+    //textarea
+    let eventList = [];
+
+
+    //по одному
+    const gotDate = document.querySelector("#date");
+    const gotEvent = document.querySelector("#event");
+    const statusListContainer = document.querySelector(".status-list");
+
+    const statusList = [ // список статусов
+        {
+            label: 'no music',
+            class_style: 'nomusic'
+        },
+        {
+            label: 'music',
+            class_style: 'music'
+        },
+        {
+            label: 'test',
+            class_style: 'test' // ключ к status в getObj
+        }
+    ];
+
+    const addItemBtn = document.querySelector(".add-item"); // OK button
+    const validationFormSing = new ValidationForm(addItemBtn, { date: false, event: false, status: false });
+
+    const addListBtn = document.querySelector(".add-list"); // Ok2
+
+    const eventListContainer = document.querySelector(".event-list"); // div для результатов
+
+    let gotObj = {
+        date: "",
+        event: "",
+        status: "" // class_style
+    };
+
+    /* Рендер */
+
+    statusList.forEach(btn => { // button render
+        // btn — { label: 'no music', class_style: 'nomusic' }
+        statusListContainer.insertAdjacentHTML('afterbegin', `<button class="status-item" data-style="${btn.class_style}">${btn.label}</button>`);//в функцию
+    });
+
+
+    /* Получение данных с полей */
+
+    //обработка верхних кнопок
+    buttonsContainer.onclick = (ev) => {
+        const tab = ev.target.dataset.tab;
+        const tabActiveDiv = tabContainer.querySelector(".show");
+        tabActiveDiv.classList.remove("show");
+        const tabDiv = tabContainer.querySelector(`.${tab}`);
+        tabDiv.classList.add("show");
+        makeBtnActive(buttonsContainer, ev);
+    };
+
+
+
+    // обработка Date
+    gotDate.onchange = (ev) => {
+        const value = ev.target.value;
+        if (value) {
+            validationFormSing.checkListFieldOn("date");
+            gotObj.date = value;
+        } else {
+            validationFormSing.checkListFieldOff("date");
+        }
+    };
+
+    // обработка event
+    gotEvent.onkeyup = (ev) => {
+        const value = ev.target.value;
+        if (value) {
+            validationFormSing.checkListFieldOn("event");
+            gotObj.event = value;
+        } else {
+            validationFormSing.checkListFieldOff("event");
+        }
+    };
+
+    //обработка статуса
+    statusListContainer.onclick = (ev) => {
+        validationFormSing.checkListFieldOn("status");
+        gotObj.status = ev.target.dataset.style;
+        makeBtnActive(statusListContainer, ev);
+    };
+
+    let render = new Render(eventListContainer);
+
+    localforage.getItem('eventlist').then(function (value) {
+        // This code runs once the value has been loaded
+        // from the offline store.
+        console.log(value);
+        eventList = value;
+        render.renderEventList(eventList);
+    }).catch(function (err) {
+        // This code runs if there were any errors
+        console.log(err);
+    });
+
+
+    // обработка клика OK, объект gotObj → в массив, event → в div
+    addItemBtn.onclick = () => {
+        gotDate.value = "";
+        gotEvent.value = "";
+        eventList.push(gotObj);
+        console.log(eventList);
+        render.renderItem(gotObj);
+    };
+
+    //получение статусов
+    let selectedStatus = "nomusic";
+
+    statusBtnContainer.onclick = (ev) => {
+        selectedStatus = ev.target.dataset.status;
+    };
+
+    //OK2
+    addListBtn.onclick = () => {
+        const data = document.querySelector("textarea").value;
+        let addedEventList = getText(data, selectedStatus);
+        //console.log(eventList);
+        render.renderEventList(addedEventList);
+        localforage.getItem('eventlist')
+            .then(function (value) {
+                value.push(...addedEventList);
+            })
+            .then(function (value) {
+                setItem('eventlist', addedEventList, function (err, value) {
+                    console.log(value);
+                });
+            })
+    }
+</script>
+
+</html>
