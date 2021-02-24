@@ -43,6 +43,8 @@
     <div class="container event-list">
 
     </div>
+    <button class="forage-clear">Forage clear</button>
+
 </body>
 <script src="localforage.js">
 </script>
@@ -63,7 +65,7 @@
     /* buttons */
     const buttonsContainer = document.querySelector(".buttons");
     const statusBtnContainer = document.querySelector(".status-buttons-container");
-
+    const forageClearBtn = document.querySelector(".forage-clear");
 
     //textarea
     let eventList = [];
@@ -153,20 +155,6 @@
         makeBtnActive(statusListContainer, ev);
     };
 
-    let render = new Render(eventListContainer);
-
-    localforage.getItem('eventlist').then(function (value) {
-        // This code runs once the value has been loaded
-        // from the offline store.
-        console.log(value);
-        eventList = value;
-        render.renderEventList(eventList);
-    }).catch(function (err) {
-        // This code runs if there were any errors
-        console.log(err);
-    });
-
-
     // обработка клика OK, объект gotObj → в массив, event → в div
     addItemBtn.onclick = () => {
         gotDate.value = "";
@@ -187,18 +175,36 @@
     addListBtn.onclick = () => {
         const data = document.querySelector("textarea").value;
         let addedEventList = getText(data, selectedStatus);
-        //console.log(eventList);
+        eventList.push(...addedEventList);
+        localforage.setItem('eventlist', eventList);
         render.renderEventList(addedEventList);
-        localforage.getItem('eventlist')
-            .then(function (value) {
-                value.push(...addedEventList);
-            })
-            .then(function (value) {
-                setItem('eventlist', addedEventList, function (err, value) {
-                    console.log(value);
-                });
-            })
-    }
+    };
+
+    let render = new Render(eventListContainer);
+    //
+    //         localforage.getItem('eventlist').then(function (value) {
+    //         // This code runs once the value has been loaded
+    //         // from the offline store.
+    //         console.log(value);
+    //         eventList = value;
+    //         render.renderEventList(eventList);
+    //     }).catch(function (err) {
+    //         // This code runs if there were any errors
+    //         console.log(err);
+    //     });
+
+
+    // //Forage Clear
+    // forageClearBtn.onclick = () => {
+    //     localforage.clear().then(function () {
+    //         // Run this code once the database has been entirely deleted.
+    //         console.log('Database is now empty.');
+    //     }).catch(function (err) {
+    //         // This code runs if there were any errors
+    //         console.log(err);
+    //     });
+    //     eventList = [];
+    // }
 </script>
 
 </html>
