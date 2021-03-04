@@ -51,6 +51,7 @@
     import Render from "./render.js";
     import makeBtnActive from "./makeBtnActive.js";
     import ValidationForm from "./validationForm.js";
+    import StatusBtn from "./statusBtns.js";
 
     localforage.config({
         driver: localforage.IndexedDB,
@@ -67,6 +68,7 @@
 
     //textarea
     let eventList = [];
+    console.log(eventList);
 
 
     //по одному
@@ -74,20 +76,7 @@
     const gotEvent = document.querySelector("#event");
     const statusListContainer = document.querySelector(".status-list");
 
-    const statusList = [ // список статусов
-        {
-            label: 'no music',
-            class_style: 'nomusic'
-        },
-        {
-            label: 'music',
-            class_style: 'music'
-        },
-        {
-            label: 'test',
-            class_style: 'test' // ключ к status в getObj
-        }
-    ];
+
 
     const addItemBtn = document.querySelector(".add-item"); // OK button
     const validationFormSing = new ValidationForm(addItemBtn, { date: false, event: false, status: false });
@@ -102,12 +91,15 @@
         status: "" // class_style
     };
 
-    /* Рендер */
+    //обработка клика по статусу на вкладке Одно
+    const singleStatusHandler = (ev) => {
+        validationFormSing.checkListFieldOn("status");
+        gotObj.status = ev.target.dataset.style;
+    };
 
-    statusList.forEach(btn => { // button render
-        // btn — { label: 'no music', class_style: 'nomusic' }
-        statusListContainer.insertAdjacentHTML('afterbegin', `<button class="status-item" data-style="${btn.class_style}">${btn.label}</button>`);//в функцию
-    });
+    const singleStatus = new StatusBtn(statusListContainer, singleStatusHandler);
+    singleStatus.render();
+    //pluralstatus< plStatusHandler
 
 
     /* Получение данных с полей */
@@ -121,7 +113,6 @@
         tabDiv.classList.add("show");
         makeBtnActive(buttonsContainer, ev);
     };
-
 
 
     // обработка Date
@@ -146,12 +137,6 @@
         }
     };
 
-    //обработка статуса
-    statusListContainer.onclick = (ev) => {
-        validationFormSing.checkListFieldOn("status");
-        gotObj.status = ev.target.dataset.style;
-        makeBtnActive(statusListContainer, ev);
-    };
 
     // обработка клика OK, объект gotObj → в массив, event → в div
     addItemBtn.onclick = () => {
@@ -159,6 +144,7 @@
         gotEvent.value = "";
         eventList.push(gotObj);
         console.log(eventList);
+        localforage.setItem('eventlist', eventList);
         render.renderItem(gotObj);
     };
 
@@ -179,30 +165,31 @@
     };
 
     let render = new Render(eventListContainer);
-    //
-    //         localforage.getItem('eventlist').then(function (value) {
-    //         // This code runs once the value has been loaded
-    //         // from the offline store.
-    //         console.log(value);
-    //         eventList = value;
-    //         render.renderEventList(eventList);
-    //     }).catch(function (err) {
-    //         // This code runs if there were any errors
-    //         console.log(err);
-    //     });
+            localforage.getItem('eventlist').then(function (value) {
+            // This code runs once the value has been loaded
+            // from the offline store.
+            console.log(value);
+            if (value!==null) {
+                eventList = value;
+                render.renderEventList(eventList);
+            }
+        }).catch(function (err) {
+            // This code runs if there were any errors
+            console.log(eventList);
+        });
 
 
-    // //Forage Clear
-    // forageClearBtn.onclick = () => {
-    //     localforage.clear().then(function () {
-    //         // Run this code once the database has been entirely deleted.
-    //         console.log('Database is now empty.');
-    //     }).catch(function (err) {
-    //         // This code runs if there were any errors
-    //         console.log(err);
-    //     });
-    //     eventList = [];
-    // }
+    //Forage Clear
+    forageClearBtn.onclick = () => {
+        localforage.clear().then(function () {
+            // Run this code once the database has been entirely deleted.
+            console.log('Database is now empty.');
+        }).catch(function (err) {
+            // This code runs if there were any errors
+            console.log(err);
+        });
+        //clean render container innerhtml
+    }
 </script>
 
 </html>

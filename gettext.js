@@ -1,4 +1,7 @@
+import generateId from "./generateId.js";
+
 const result = [];
+
 
 export default function getText(data, selectedStatus) { //data в аргумент
 
@@ -11,11 +14,13 @@ export default function getText(data, selectedStatus) { //data в аргумен
             const date = String(stringArray[1]).trim();
             const event = String(stringArray[2]).trim();
             const status = selectedStatus;
+            const id = generateId();
             if (!date.includes("-") && date !== "") {
                 result.push({
                     date,
                     event,
                     status,
+                    id
                 });
             }
         }
