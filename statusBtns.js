@@ -18,10 +18,16 @@ export default class StatusBtn{
           makeBtnActive(statusContainer, ev);
         };
     }
-    render() {
+    render(currentStatus) {
         this.statusList.forEach(btn => { // button render
             // btn — { label: 'no music', class_style: 'nomusic' }
-            this.statusContainer.insertAdjacentHTML('afterbegin', `<button class="status-item" data-style="${btn.class_style}">${btn.label}</button>`);//в функцию
+            this.statusContainer.insertAdjacentHTML('afterbegin', `<button class="status-item ${this.statusActive(currentStatus, btn.class_style)}" data-style="${btn.class_style}">${btn.label}</button>`);//в функцию
         });
+    }
+    statusActive(currentStatus, classStyle) {
+        if (currentStatus === classStyle) {
+            return "active";
+        }
+        console.log(currentStatus, classStyle);
     }
 }

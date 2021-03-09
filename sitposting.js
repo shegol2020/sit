@@ -6,14 +6,15 @@ import StatusBtn from "./statusBtns.js";
 import generateId from "./generateId.js";
 import clearFields from "./clearFields.js";
 import EditForm from "./EditForm.js";
+import toggleTabs from "./toogleTabs.js";
 
 localforage.config({
     driver: localforage.IndexedDB,
     name: 'myApp'
 });
 
-//const addBtn = document.querySelector(".add-btn");
-//const addContainer = document.querySelector(".add-container");
+const addBtn = document.querySelector(".add-btn");
+const addContainer = document.querySelector(".add-container");
 const tabContainer = document.querySelector(".tab-container");
 
 const gotDate = document.querySelector(".singular-tab #date");
@@ -36,9 +37,12 @@ const addListBtn = document.querySelector(".add-list"); // Ok2
 const eventListContainer = document.querySelector(".event-list");
 let eventList = [];
 const editBtn = document.querySelector(".edit-btn");
-const editContainer = document.querySelector(".edit-container");
+const saveAndCancel = document.querySelector(".save-and-cancel");
+const editContainer = document.querySelector(".edit-container"); //скрывать до нажатия на edit
 let selectedItem = {};
-const editForm = new EditForm(editContainer);
+const editFieldsContainer = document.querySelector(".edit-fields-container");
+const editForm = new EditForm(editFieldsContainer);
+const cancelBtn = document.querySelector("#cancel");
 
 
 
@@ -57,20 +61,16 @@ const pluralStatusHandler = (ev) => {
 
 const singleStatus = new StatusBtn(statusListContainer, singleStatusHandler);
 const pluralStatus = new StatusBtn(secondStatusListContainer, pluralStatusHandler);
-pluralStatus.render(); //не поняла, можно ли его куда-то переместить как singleStatus.render
-singleStatus.render();
 
-/* Add btn */
-// let addContainerOn = false;
-//
-// addBtn.onclick = () => {
-//     if (!addContainerOn) {
-//         addContainer.classList.add("show");
-//         addContainerOn = true;
-//     } else {
-//         addContainer.classList.remove("show");
-//     }
-// };
+/* Add btn, render btns */
+const addTab = new toggleTabs(editContainer, addContainer);
+
+addBtn.onclick = () => {
+    //addContainer.classList.toggle("show");
+    addTab.toggleTab();
+    pluralStatus.render();
+    singleStatus.render();
+};
 
 /* обработка верхних кнопок */
 buttonsContainer.onclick = (ev) => {
@@ -158,8 +158,30 @@ eventListContainer.onclick = (ev) => {
     editBtn.disabled = false;
 };
 
-/* Edit */
+
+/* Edit */ //при клике скрывать Add контейнер
+const editStatusHandler = (ev) => {
+    //selectedStatus = ev.target.dataset.style;
+    console.log("edit");
+};
+const editStatusListContainer = editContainer.querySelector(".status-list");
+const editStatus = new StatusBtn(editStatusListContainer, editStatusHandler);
+
+const editTab = new toggleTabs(addContainer, saveAndCancel);
+
 editBtn.onclick = () => {
     editForm.render(selectedItem);
     console.log(selectedItem);
+    editStatus.render(selectedItem.status);
+    editTab.toggleTab();
+    editStatus.statusActive(selectedItem.status, 'nomusic');
+};
+
+
+
+/* Cancel */
+const cancelTab = new toggleTabs(editContainer, eventListContainer);
+
+cancelBtn.onclick = () => {
+    cancelTab.toggleTab();
 };
