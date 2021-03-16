@@ -13,51 +13,52 @@
             display: none;
         }
 
-        .add-container{
+        .add-edit-container>div{
             display: none;
         }
 
         .show{
             display: block !important;
         }
-        .hide{
-            display: none !important;
-        }
     </style>
 </head>
 
 <body>
-    <button class="add-btn">Add</button>
-    <div class="add-container">
-        <div class="buttons">
-            <button class="plural-button active" data-tab="plural-tab">Несколько</button>
-            <button class="singular-button" data-tab="singular-tab">Одно</button>
-        </div>
-        <div class="tab-container">
-            <div class="tab-one singular-tab">
-                <input type="date" placeholder="date" id="date">
-                <input type="text" placeholder="event" id="event">
-                <div class="status-list"></div>
-                <button class="add-item" disabled="true">OK</button>
+    <div class="add-edit-btns">
+        <button class="add-btn" data-tab="add-container">Add</button>
+        <button class="edit-btn" disabled="true" data-tab="edit-container">Edit</button>
+    </div>
+    <div class="add-edit-container">
+        <div class="add-container">
+            <div class="buttons">
+                <button class="plural-button active" data-tab="plural-tab">Несколько</button>
+                <button class="singular-button" data-tab="singular-tab">Одно</button>
             </div>
-            <div class="tab-two plural-tab show">
-                <textarea rows="10" cols="45" name="text"></textarea>
-                <div class="second-status-list"></div>
-                <button class="add-list">OK2</button>
+            <div class="tab-container">
+                <div class="tab-one singular-tab">
+                    <input type="date" placeholder="date" id="date">
+                    <input type="text" placeholder="event" id="event">
+                    <div class="status-list"></div>
+                    <button class="add-item" disabled="true">OK</button>
+                </div>
+                <div class="tab-two plural-tab">
+                    <textarea rows="10" cols="45" name="text"></textarea>
+                    <div class="second-status-list"></div>
+                    <button class="add-list">OK2</button>
+                </div>
+            </div>
+        </div>
+        <div class="edit-container singular-tab">
+            <div class="edit-fields-container"></div>
+            <div class="status-list" ></div>
+            <div class="save-and-cancel">
+                <button class="add-item" disabled="true">Save</button>
+                <button class="add-item" id="cancel">Cancel</button>
             </div>
         </div>
     </div>
-<button class="edit-btn" disabled="true">Edit</button>
-<button class="forage-clear">Clear</button>
+    <button class="forage-clear">Clear</button>
 <div class="container event-list"></div>
-<div class="edit-container singular-tab show">
-    <div class="edit-fields-container"></div>
-    <div class="status-list" ></div>
-    <div class="save-and-cancel">
-        <button class="add-item" disabled="true">Save</button>
-        <button class="add-item" id="cancel">Cancel</button>
-    </div>
-    </div>
 </body>
 <script src="localforage.js"></script>
 <script type="module" src="./sitposting.js">

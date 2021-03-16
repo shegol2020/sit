@@ -1,17 +1,26 @@
-export default class toggleTabs {
-    constructor(hideContainer, showContainer){
-        this.hideContainer = hideContainer;
-        this.showContainer = showContainer;
+import makeBtnActive from "./makeBtnActive.js";
+
+export default class ToggleTabs {
+    constructor(btnsContainer, tabsContainer, tabHandlers){
+        this.tabsContainer = tabsContainer;
+        btnsContainer.onclick = (ev) => {
+            const tab = ev.target.dataset.tab;
+            console.log(tab);
+            this.showTab(tab);
+            makeBtnActive(btnsContainer, ev);
+            if (tabHandlers && tab in tabHandlers) {
+                tabHandlers[tab]();
+            }
+        };
     }
-    toggleTab() {
-        if (this.showContainer.contains("hide")) {
-            this.showContainer.classList.toggle("hide");
-        }
-        if (this.hideContainer.contains("show")) {
-            this.hideContainer.classList.toggle("show");
-        }
-        // this.btn.onclick = () => {
-        this.showContainer.classList.toggle("show");
-        this.hideContainer.classList.toggle("hide");
+    hideTab() {
+        const tabActiveDiv = this.tabsContainer.querySelector(".show");
+        if (tabActiveDiv) tabActiveDiv.classList.remove("show");
+    };
+    showTab(tab) {
+        debugger;
+        this.hideTab();
+        const tabDiv = this.tabsContainer.querySelector(`.${tab}`);
+        tabDiv.classList.add("show");
     }
 }

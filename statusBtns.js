@@ -14,11 +14,12 @@ export default class StatusBtn{
             }
         ];
         this.statusContainer.onclick = (ev) => {
-         statusHandler(ev);
+          statusHandler(ev);
           makeBtnActive(statusContainer, ev);
         };
     }
-    render(currentStatus) {
+        render(currentStatus) {
+        this.statusContainer.innerHTML = "";
         this.statusList.forEach(btn => { // button render
             // btn — { label: 'no music', class_style: 'nomusic' }
             this.statusContainer.insertAdjacentHTML('afterbegin', `<button class="status-item ${this.statusActive(currentStatus, btn.class_style)}" data-style="${btn.class_style}">${btn.label}</button>`);//в функцию
@@ -28,6 +29,6 @@ export default class StatusBtn{
         if (currentStatus === classStyle) {
             return "active";
         }
-        console.log(currentStatus, classStyle);
+        //console.log(currentStatus, classStyle);
     }
 }

@@ -6,7 +6,7 @@ import StatusBtn from "./statusBtns.js";
 import generateId from "./generateId.js";
 import clearFields from "./clearFields.js";
 import EditForm from "./EditForm.js";
-import toggleTabs from "./toogleTabs.js";
+import ToggleTabs from "./toogleTabs.js";
 
 localforage.config({
     driver: localforage.IndexedDB,
@@ -42,6 +42,8 @@ const editContainer = document.querySelector(".edit-container"); //скрыва�
 let selectedItem = {};
 const editFieldsContainer = document.querySelector(".edit-fields-container");
 const editForm = new EditForm(editFieldsContainer);
+const addEditBtns = document.querySelector(".add-edit-btns");
+const addEditContainer = document.querySelector(".add-edit-container");
 const cancelBtn = document.querySelector("#cancel");
 
 
@@ -63,24 +65,40 @@ const singleStatus = new StatusBtn(statusListContainer, singleStatusHandler);
 const pluralStatus = new StatusBtn(secondStatusListContainer, pluralStatusHandler);
 
 /* Add btn, render btns */
-const addTab = new toggleTabs(editContainer, addContainer);
 
-addBtn.onclick = () => {
-    //addContainer.classList.toggle("show");
-    addTab.toggleTab();
-    pluralStatus.render();
-    singleStatus.render();
+const tabHandlers = {
+    "edit-container": () => {
+        editForm.render(selectedItem);
+        //console.log(selectedItem);
+        editStatus.render(selectedItem.status);
+        //editStatus.statusActive(selectedItem.status, 'nomusic');
+    },
+    "add-container": () => {
+
+    }
 };
+
+
+const addEditTabs = new ToggleTabs(addEditBtns, addEditContainer, tabHandlers);
+addEditTabs.showTab("edit-container");
+
+pluralStatus.render();
+singleStatus.render();
+
+
+
+/* Edit */ //при клике скрывать Add контейнер
+const editStatusHandler = (ev) => {
+    //selectedStatus = ev.target.dataset.style;
+    console.log("edit");
+};
+const editStatusListContainer = editContainer.querySelector(".status-list");
+const editStatus = new StatusBtn(editStatusListContainer, editStatusHandler);
+
 
 /* обработка верхних кнопок */
-buttonsContainer.onclick = (ev) => {
-    const tab = ev.target.dataset.tab;
-    const tabActiveDiv = tabContainer.querySelector(".show");
-    tabActiveDiv.classList.remove("show");
-    const tabDiv = tabContainer.querySelector(`.${tab}`);
-    tabDiv.classList.add("show");
-    makeBtnActive(buttonsContainer, ev);
-};
+const singPlurBtns = new ToggleTabs(buttonsContainer, tabContainer);
+singPlurBtns.showTab("plural-tab");
 
 
 /* обработка Date */
@@ -159,29 +177,10 @@ eventListContainer.onclick = (ev) => {
 };
 
 
-/* Edit */ //при клике скрывать Add контейнер
-const editStatusHandler = (ev) => {
-    //selectedStatus = ev.target.dataset.style;
-    console.log("edit");
-};
-const editStatusListContainer = editContainer.querySelector(".status-list");
-const editStatus = new StatusBtn(editStatusListContainer, editStatusHandler);
-
-const editTab = new toggleTabs(addContainer, saveAndCancel);
-
-editBtn.onclick = () => {
-    editForm.render(selectedItem);
-    console.log(selectedItem);
-    editStatus.render(selectedItem.status);
-    editTab.toggleTab();
-    editStatus.statusActive(selectedItem.status, 'nomusic');
-};
-
-
 
 /* Cancel */
-const cancelTab = new toggleTabs(editContainer, eventListContainer);
-
-cancelBtn.onclick = () => {
-    cancelTab.toggleTab();
-};
+// const cancelTab = new toggleTabs(editContainer, eventListContainer);
+//
+// cancelBtn.onclick = () => {
+//     cancelTab.toggleTab();
+// };
