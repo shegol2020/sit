@@ -13,13 +13,41 @@
             display: none;
         }
 
-        .add-edit-container>div{
-            display: none;
+        .edit-container{
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateX(320px);
+            width: 320px;
+            height: 100vh;
+            background-color: white;
+            border-left: 1px solid #dddddd;
+            transition: transform .3s;
+        }
+        .add-container{
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translateX(320px);
+            width: 320px;
+            height: 100vh;
+            background-color: white;
+            border-left: 1px solid #dddddd;
+            transition: transform .3s;
+        }
+
+
+        .visible{
+            transform: translateX(0);
         }
 
         .show{
             display: block !important;
         }
+        .event-item a{
+            padding: 4px;
+        }
+
     </style>
 </head>
 
@@ -45,14 +73,15 @@
                     <textarea rows="10" cols="45" name="text"></textarea>
                     <div class="second-status-list"></div>
                     <button class="add-list">OK2</button>
+                    <button class="add-cancel">Cancel</button>
                 </div>
             </div>
         </div>
-        <div class="edit-container singular-tab">
+        <div class="edit-container">
             <div class="edit-fields-container"></div>
             <div class="status-list" ></div>
             <div class="save-and-cancel">
-                <button class="add-item" disabled="true">Save</button>
+                <button class="add-item" id="save">Save</button>
                 <button class="add-item" id="cancel">Cancel</button>
             </div>
         </div>
@@ -60,7 +89,7 @@
     <button class="forage-clear">Clear</button>
 <div class="container event-list"></div>
 </body>
-<script src="localforage.js"></script>
+<script src="modules/localforage.js"></script>
 <script type="module" src="./sitposting.js">
 </script>
 

@@ -1,10 +1,10 @@
 import getText from "./gettext.js"
 import Render from "./render.js";
-import makeBtnActive from "./makeBtnActive.js";
+import makeBtnActive from "./utilities/makeBtnActive.js";
 import ValidationForm from "./validationForm.js";
 import StatusBtn from "./statusBtns.js";
-import generateId from "./generateId.js";
-import clearFields from "./clearFields.js";
+import generateId from "./utilities/generateId.js";
+import clearFields from "./utilities/clearFields.js";
 import EditForm from "./EditForm.js";
 import ToggleTabs from "./toogleTabs.js";
 
@@ -21,6 +21,9 @@ const gotDate = document.querySelector(".singular-tab #date");
 const gotEvent = document.querySelector(".singular-tab #event");
 const statusListContainer = document.querySelector(".singular-tab .status-list");
 const secondStatusListContainer = document.querySelector(".second-status-list");
+
+const gotEditEvent = document.querySelector("#event-edit");
+
 
 let gotObj = {
     date: "",
@@ -45,6 +48,8 @@ const editForm = new EditForm(editFieldsContainer);
 const addEditBtns = document.querySelector(".add-edit-btns");
 const addEditContainer = document.querySelector(".add-edit-container");
 const cancelBtn = document.querySelector("#cancel");
+const saveBtn = document.querySelector("#save");
+const addCancelBtn = document.querySelector(".add-cancel");
 
 
 
@@ -64,7 +69,15 @@ const pluralStatusHandler = (ev) => {
 const singleStatus = new StatusBtn(statusListContainer, singleStatusHandler);
 const pluralStatus = new StatusBtn(secondStatusListContainer, pluralStatusHandler);
 
-/* Add btn, render btns */
+/* Add */
+addBtn.onclick = () => {
+    addContainer.classList.add("visible");
+};
+
+addCancelBtn.onclick = () => {
+    addContainer.classList.remove("visible");
+};
+
 
 const tabHandlers = {
     "edit-container": () => {
@@ -79,21 +92,9 @@ const tabHandlers = {
 };
 
 
-const addEditTabs = new ToggleTabs(addEditBtns, addEditContainer, tabHandlers);
-addEditTabs.showTab("edit-container");
+//const addEditTabs = new ToggleTabs(addEditBtns, addEditContainer, tabHandlers);
+//addEditTabs.showTab("edit-container");
 
-pluralStatus.render();
-singleStatus.render();
-
-
-
-/* Edit */ //при клике скрывать Add контейнер
-const editStatusHandler = (ev) => {
-    //selectedStatus = ev.target.dataset.style;
-    console.log("edit");
-};
-const editStatusListContainer = editContainer.querySelector(".status-list");
-const editStatus = new StatusBtn(editStatusListContainer, editStatusHandler);
 
 
 /* обработка верхних кнопок */
@@ -171,16 +172,46 @@ forageClearBtn.onclick = () => {
 /* клик на готовый список */
 eventListContainer.onclick = (ev) => {
     const parent = ev.target.closest('.event-item');
+    console.log(ev.target);
     const id = parent.dataset.id;
     selectedItem = eventList.find(item => item.id === id);
     editBtn.disabled = false;
+    switch (ev.target.className) {
+        case "editItem":  //переписать на switch
+            editForm.render(selectedItem);
+            editStatus.render(selectedItem.status);
+            //editStatus.statusActive(selectedItem.status, 'nomusic');
+            console.log("edit");
+            editContainer.classList.add("visible");
+            break;
+        case "removeItem":
+            console.log("remove");
+            break;
+    }
 };
 
 
+/* Edit */
 
-/* Cancel */
-// const cancelTab = new toggleTabs(editContainer, eventListContainer);
-//
-// cancelBtn.onclick = () => {
-//     cancelTab.toggleTab();
-// };
+const editStatusHandler = (ev) => {
+    //selectedStatus = ev.target.dataset.style;
+    console.log("edit");
+};
+const editStatusListContainer = editContainer.querySelector(".status-list");
+const editStatus = new StatusBtn(editStatusListContainer, editStatusHandler);
+
+pluralStatus.render();
+singleStatus.render();
+
+/* Edit Cancel */
+cancelBtn.onclick = () => {
+    editContainer.classList.remove("visible");
+}; // аналогично с save
+
+/* Edit Save */
+//const gotEditEvent = document.querySelector("#event-edit"); //рендер в EditForm
+
+saveBtn.onclick = () => {
+    //console.log(gotEditEvent);
+    editContainer.classList.remove("visible");
+};

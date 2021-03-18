@@ -1,4 +1,4 @@
-import makeBtnActive from "./makeBtnActive.js";
+import makeBtnActive from "./utilities/makeBtnActive.js";
 
 export default class StatusBtn{
     constructor(statusContainer, statusHandler) {

@@ -4,7 +4,7 @@ export default class Render {
     }
 
     renderItem(item) {
-        this.eventListContainer.insertAdjacentHTML('afterbegin', `<div class="event-item ${item.status}" data-id="${item.id}"><span>${item.date} | </span><span>${item.event}  | </span><span>${item.status}</span></div>`);
+        this.eventListContainer.insertAdjacentHTML('afterbegin', `<div class="event-item ${item.status}" data-id="${item.id}"><span>${item.date} | </span><span>${item.event}  | </span><span>${item.status}</span><a href="#" class="editItem">edit</a><a href="#" class="removeItem">remove</a></div>`);
     }
 
     renderEventList(eventList) {

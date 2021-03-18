@@ -1,4 +1,4 @@
-import generateId from "./generateId.js";
+import generateId from "./utilities/generateId.js";
 
 const result = [];
 

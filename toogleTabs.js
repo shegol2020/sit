@@ -1,4 +1,4 @@
-import makeBtnActive from "./makeBtnActive.js";
+import makeBtnActive from "./utilities/makeBtnActive.js";
 
 export default class ToggleTabs {
     constructor(btnsContainer, tabsContainer, tabHandlers){
@@ -13,12 +13,13 @@ export default class ToggleTabs {
             }
         };
     }
-    hideTab() {
+      hideTab() {
         const tabActiveDiv = this.tabsContainer.querySelector(".show");
-        if (tabActiveDiv) tabActiveDiv.classList.remove("show");
+        //debugger;
+        if (tabActiveDiv && tabActiveDiv.parentNode.className === this.tabsContainer.className) tabActiveDiv.classList.remove("show");
     };
     showTab(tab) {
-        debugger;
+        // debugger;
         this.hideTab();
         const tabDiv = this.tabsContainer.querySelector(`.${tab}`);
         tabDiv.classList.add("show");
