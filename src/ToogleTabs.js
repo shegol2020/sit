@@ -1,4 +1,4 @@
-import makeBtnActive from "./utilities/makeBtnActive.js";
+import makeBtnActive from "../utilities/makeBtnActive.js";
 
 export default class ToggleTabs {
     constructor(btnsContainer, tabsContainer, tabHandlers){
