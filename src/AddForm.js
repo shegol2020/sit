@@ -13,9 +13,20 @@ export default class AddForm {
         const secondStatusListContainer = document.querySelector(".second-status-list"); // pluralTab
         const tabContainer = document.querySelector(".tab-container");
         const buttonsContainer = document.querySelector(".buttons");
+        const dateContainer = document.querySelector(".plural-tab #plurDate");
         const addItemBtn = document.querySelector(".add-item"); // OK button singleTab
         const addListBtn = document.querySelector(".add-list"); // Ok2 pluralTab
+        const addCancelBtn = document.querySelector(".plural-tab .add-cancel");
+        const addSingCancelBtn = document.querySelector(".singular-tab .add-cancel");
+        const plurField = document.querySelector("textarea");
+        /* Cancel */
+          addCancelBtn.onclick = () => {
+            this.hide();
+        };
 
+        addSingCancelBtn.onclick = () =>{
+            this.hide();
+        };
 
         let gotObj = {
             date: "",
@@ -32,14 +43,14 @@ export default class AddForm {
 
         const singleStatusHandler = (ev) => { // singleTab
             validationFormSing.checkListFieldOn("status");
-            gotObj.status = ev.target.dataset.style;
+            gotObj.status = ev;
         };
 
         let selectedStatus = "nomusic"; // статус по умолчанию  // pluralTab
 
         /* обработка клика по статусу на вкладке несколько */
         const pluralStatusHandler = (ev) => {   // pluralTab
-            selectedStatus = ev.target.dataset.style;
+            selectedStatus = ev;
         };
 
         const singleStatus = new StatusBtn(statusListContainer, singleStatusHandler); // singleTab
@@ -75,15 +86,17 @@ export default class AddForm {
         addItemBtn.onclick = () => { // singleTab
             clearFields([gotDate, gotEvent]);
             gotObj.id = generateId();
+            //console.log(gotObj);
             addSingHandler(gotObj);
         };
 
 
         /* OK2 */
         addListBtn.onclick = () => { // pluralTab
-            const data = document.querySelector("textarea").value;
-            let addedEventList = getText(data, selectedStatus);
+            let dateArray = dateContainer.value.split('-');
+            let addedEventList = getText(plurField.value, selectedStatus, dateArray);
             addPlurHandler(addedEventList);
+            this.hide();
         };
     }
     hide(){

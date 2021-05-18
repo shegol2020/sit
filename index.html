@@ -24,7 +24,7 @@
             border-left: 1px solid #dddddd;
             transition: transform .3s;
         }
-        .add-container{
+        .sidebar {
             position: absolute;
             top: 0;
             right: 0;
@@ -35,8 +35,6 @@
             border-left: 1px solid #dddddd;
             transition: transform .3s;
         }
-
-
         .visible{
             transform: translateX(0);
         }
@@ -47,7 +45,17 @@
         .event-item a{
             padding: 4px;
         }
-
+        .event-list{
+            border: 1px solid #e5e5e5;
+        }
+        .cancelRemove {
+            width: 100%;
+            height: 100%;
+            background-color: #e5e5e5;
+        }
+        .select{
+            background-color: #dddddd;
+        }
     </style>
 </head>
 
@@ -56,44 +64,14 @@
         <button class="add-btn" data-tab="add-container">Add</button>
         <button class="edit-btn" disabled="true" data-tab="edit-container">Edit</button>
     </div>
-    <div class="add-edit-container">
-        <div class="add-container">
-            <div class="buttons">
-                <button class="plural-button active" data-tab="plural-tab">Несколько</button>
-                <button class="singular-button" data-tab="singular-tab">Одно</button>
-            </div>
-            <div class="tab-container">
-                <div class="tab-one singular-tab">
-                    <input type="date" placeholder="date" id="date">
-                    <input type="text" placeholder="event" id="event">
-                    <div class="status-list"></div>
-                    <button class="add-item" disabled="true">OK</button>
-                </div>
-                <div class="tab-two plural-tab">
-                    <textarea rows="10" cols="45" name="text"></textarea>
-                    <div class="second-status-list"></div>
-                    <button class="add-list">OK2</button>
-                    <button class="add-cancel">Cancel</button>
-                </div>
-            </div>
-        </div>
-        <div class="edit-container">
-            <div class="edit-fields-container">
-                <div><input type="text" placeholder="date" id="date-edit"></div>
-                 <div><textarea type="text" placeholder="event" id="event-edit"></textarea></div>
-            </div>
-            <div class="edit-status-list" ></div>
-            <div class="save-and-cancel">
-                <button class="add-item" id="save">Save</button>
-                <button class="add-item" id="cancel">Cancel</button>
-            </div>
-        </div>
+    <div class="buttons-group">
+        <button class="forage-clear">Clear</button>
+        <button class="export">Export</button>
     </div>
-    <button class="forage-clear">Clear</button>
-<div class="container event-list"></div>
+
 </body>
-<script src="modules/localforage.js"></script>
-<script type="module" src="./main.js">
+<!--<script src="modules/localforage.js"></script>-->
+<script src="./main.js">
 </script>
 
 </html>

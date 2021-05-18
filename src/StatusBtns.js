@@ -14,7 +14,7 @@ export default class StatusBtn{
             }
         ];
         this.statusContainer.onclick = (ev) => {
-          statusHandler(ev);
+          statusHandler(ev.target.dataset.style);
           makeBtnActive(statusContainer, ev);
         };
     }

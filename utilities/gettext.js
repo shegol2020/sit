@@ -1,29 +1,35 @@
 import generateId from "./generateId.js";
+import dayHandler from "./dayHandler.js";
 
-const result = [];
-
-
-export default function getText(data, selectedStatus) { //data в аргумент
+export default function getText(data, selectedStatus, dateArray) { //data в аргумент
 
     const dataStrings = data.split("\n");
     //console.log(dataStrings.length);
 
+    let year = dateArray[0];
+    let month = dateArray[1]; // сделать инпут с датой, получить снаружи
+    const result = [];
+
     dataStrings.forEach(str => {
-        if (str !== "") {
+        if (str !== "" && !str.includes("/n")) {
             const stringArray = str.split("|");
-            const date = String(stringArray[1]).trim();
+            const day = String(stringArray[1]).trim();
+            const newDay = dayHandler(day);
+            const date = year + '-' + month + '-'+ newDay;
             const event = String(stringArray[2]).trim();
             const status = selectedStatus;
             const id = generateId();
-            if (!date.includes("-") && date !== "") {
+            if (!event.includes("--") && date !== "") {
                 result.push({
                     date,
                     event,
                     status,
-                    id
+                    id,
                 });
             }
         }
     });
+    //console.log(result);
     return result;
 }
+
